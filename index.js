@@ -16,6 +16,7 @@ async function run() {
     const toolsCollection = client.db("bikeTools").collection("tools");
     const bookedCollection = client.db('bikeTools').collection('bookedTools');
     const reviewCollection = client.db('bikeTools').collection('reviews');
+    const profileUpdateCollection = client.db('bikeTools').collection('updateProfile');
     console.log('connected to db jkfdlasljk');
     try {
         app.get('/tools', async (req, res) => {
@@ -48,6 +49,13 @@ async function run() {
             console.log(results);
             res.send(results);
         });
+        app.get('/updateProfile', async (req, res) => {
+            const query = {};
+            const cursor = profileUpdateCollection.find(query);
+            const results = await cursor.toArray();
+            console.log(results);
+            res.send(results);
+        });
 
         app.post('/reviews', async (req, res) => {
             const newReview = req.body;
@@ -59,7 +67,18 @@ async function run() {
             const result = await bookedCollection.insertOne(booked);
             res.send(result);
         });
-
+        app.put('/updateProfile', async (req, res) => {
+            const update = req.body;
+            const result = await profileUpdateCollection.insertOne(update);
+            res.send(result);
+        });
+        // DELETE
+        app.delete('/bookedTools/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bookedCollection.deleteOne(query);
+            res.send(result);
+        });
 
     } finally {
 
