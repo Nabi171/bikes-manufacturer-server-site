@@ -67,7 +67,15 @@ async function run() {
             const results = await cursor.toArray();
             console.log(results);
             res.send(results);
+
         });
+
+        app.get('/bookedTools/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const booking = await bookedCollection.findOne(query);
+            res.send(booking);
+        })
         app.get('/updateProfile', async (req, res) => {
             const query = {};
             const cursor = profileUpdateCollection.find(query);
