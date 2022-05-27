@@ -38,6 +38,22 @@ async function run() {
     const profileUpdateCollection = client.db('bikeTools').collection('updateProfile');
     const userCollection = client.db('bikeTools').collection('users');
     console.log('connected to db jkfdlasljk');
+
+
+    const verifyAdmin = async (req, res, next) => {
+        const requester = req.decoded.email;
+        const requseterAccount = await userCollection.findOne({ email: requester });
+        if (requseterAccount.role === 'admin') {
+            next();
+        }
+        else {
+            res.status(403).send({ message: 'forbidden' });
+        }
+    }
+
+
+
+
     try {
         app.get('/tools', async (req, res) => {
             const query = {};
@@ -147,6 +163,12 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await profileUpdateCollection.deleteOne(query);
+            res.send(result);
+        });
+        app.delete('/tools/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await toolsCollection.deleteOne(query);
             res.send(result);
         });
 
