@@ -103,7 +103,6 @@ async function run() {
             const result = await userCollection.updateOne(filter, updateDoc);
             res.send(result);
         })
-
         app.post('/tools', async (req, res) => {
             const newTool = req.body;
             const result = await toolsCollection.insertOne(newTool);
